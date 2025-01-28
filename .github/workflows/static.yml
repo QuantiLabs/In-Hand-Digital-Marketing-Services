@@ -1,0 +1,321 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Menu, X, ChevronDown, ArrowRight, 
+  ChevronLeft, ChevronRight, Instagram,
+  Facebook, Twitter, LinkedIn, Mail, Phone
+} from 'lucide-react';
+
+const TypingEffect = ({ texts }) => {
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const text = texts[currentTextIndex];
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayText.length < text.length) {
+          setDisplayText(text.slice(0, displayText.length + 1));
+        } else {
+          setTimeout(() => setIsDeleting(true), 1500);
+        }
+      } else {
+        if (displayText.length > 0) {
+          setDisplayText(text.slice(0, displayText.length - 1));
+        } else {
+          setIsDeleting(false);
+          setCurrentTextIndex((currentTextIndex + 1) % texts.length);
+        }
+      }
+    }, isDeleting ? 50 : 100);
+
+    return () => clearTimeout(timer);
+  }, [displayText, currentTextIndex, isDeleting, texts]);
+
+  return (
+    <span className="text-2xl md:text-4xl font-bold text-white">
+      {displayText}
+      <span className="animate-pulse">|</span>
+    </span>
+  );
+};
+
+const ImageCarousel = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  
+  const slides = [
+    {
+      image: "/api/placeholder/1200/600",
+      title: "Digital Strategy",
+      description: "Comprehensive digital marketing solutions"
+    },
+    {
+      image: "/api/placeholder/1200/600",
+      title: "Content Creation",
+      description: "Engaging content that converts"
+    },
+    {
+      image: "/api/placeholder/1200/600",
+      title: "SEO Optimization",
+      description: "Rank higher in search results"
+    }
+  ];
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="relative w-full h-[500px] overflow-hidden rounded-xl">
+      {slides.map((slide, index) => (
+        <div
+          key={index}
+          className={`absolute w-full h-full transition-transform duration-500 ease-in-out ${
+            index === currentSlide ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <img
+            src={slide.image}
+            alt={slide.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 p-6 text-white">
+            <h3 className="text-2xl font-bold">{slide.title}</h3>
+            <p>{slide.description}</p>
+          </div>
+        </div>
+      ))}
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 p-2 rounded-full hover:bg-white/50 transition-colors"
+      >
+        <ChevronLeft className="text-white" size={24} />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 p-2 rounded-full hover:bg-white/50 transition-colors"
+      >
+        <ChevronRight className="text-white" size={24} />
+      </button>
+    </div>
+  );
+};
+
+const ImageGrid = () => {
+  const images = [
+    {
+      src: "/api/placeholder/400/300",
+      title: "Brand Strategy",
+      category: "Marketing"
+    },
+    {
+      src: "/api/placeholder/400/300",
+      title: "Social Media",
+      category: "Digital"
+    },
+    {
+      src: "/api/placeholder/400/300",
+      title: "Content Creation",
+      category: "Creative"
+    },
+    {
+      src: "/api/placeholder/400/300",
+      title: "SEO Services",
+      category: "Technical"
+    },
+    {
+      src: "/api/placeholder/400/300",
+      title: "Web Development",
+      category: "Development"
+    },
+    {
+      src: "/api/placeholder/400/300",
+      title: "Analytics",
+      category: "Data"
+    }
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {images.map((image, index) => (
+        <div key={index} className="group relative overflow-hidden rounded-xl">
+          <img
+            src={image.src}
+            alt={image.title}
+            className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <h3 className="text-xl font-bold">{image.title}</h3>
+              <p className="text-sm text-gray-200">{image.category}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const Testimonials = () => {
+  const testimonials = [
+    {
+      name: "John Smith",
+      role: "CEO, Tech Solutions",
+      content: "Working with In-Hand Digital transformed our online presence completely. Our traffic increased by 200% in just 3 months!",
+      image: "/api/placeholder/100/100"
+    },
+    {
+      name: "Sarah Johnson",
+      role: "Marketing Director, Innovation Co",
+      content: "Their strategic approach to digital marketing helped us achieve our yearly goals in just 6 months.",
+      image: "/api/placeholder/100/100"
+    },
+    {
+      name: "Mike Williams",
+      role: "Founder, StartUp Inc",
+      content: "The team's creativity and technical expertise made our campaign a huge success. Highly recommended!",
+      image: "/api/placeholder/100/100"
+    }
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {testimonials.map((testimonial, index) => (
+        <div key={index} className="bg-white p-6 rounded-xl shadow-lg">
+          <div className="flex items-center gap-4 mb-4">
+            <img
+              src={testimonial.image}
+              alt={testimonial.name}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+            <div>
+              <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
+              <p className="text-sm text-gray-600">{testimonial.role}</p>
+            </div>
+          </div>
+          <p className="text-gray-700">{testimonial.content}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const FullWebsite = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header and Nav sections remain the same as previous artifact */}
+      
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 py-20">
+        {/* Hero Section */}
+        <section className="text-center mb-20">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            Transform Your Digital Presence
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            We combine creativity with data-driven strategies to deliver exceptional digital marketing solutions that help your business thrive in the digital age.
+          </p>
+        </section>
+
+        {/* Services Carousel */}
+        <section className="mb-20">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Our Services</h2>
+          <ImageCarousel />
+        </section>
+
+        {/* Portfolio Grid */}
+        <section className="mb-20">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Our Work</h2>
+          <ImageGrid />
+        </section>
+
+        {/* Testimonials */}
+        <section className="mb-20">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Client Success Stories</h2>
+          <Testimonials />
+        </section>
+
+        {/* Contact Section */}
+        <section className="bg-purple-600 text-white rounded-2xl p-8 md:p-12 mb-20">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+            <p className="mb-8">Let's discuss how we can help your business grow</p>
+            <button className="bg-white text-purple-600 px-8 py-3 rounded-full hover:bg-gray-100 transition-colors">
+              Contact Us
+            </button>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4">In-Hand Digital</h3>
+              <p className="text-gray-400">
+                Empowering businesses with innovative digital marketing solutions.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-lg font-bold mb-4">Services</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li>SEO Optimization</li>
+                <li>Content Marketing</li>
+                <li>Social Media Management</li>
+                <li>Web Development</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-bold mb-4">Contact</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li className="flex items-center gap-2">
+                  <Mail size={16} />
+                  sample@business.com
+                </li>
+                <li className="flex items-center gap-2">
+                  <Phone size={16} />
+                  1234567890
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-bold mb-4">Follow Us</h4>
+              <div className="flex gap-4">
+                <a href="#" className="hover:text-purple-400 transition-colors">
+                  <Facebook size={24} />
+                </a>
+                <a href="#" className="hover:text-purple-400 transition-colors">
+                  <Twitter size={24} />
+                </a>
+                <a href="#" className="hover:text-purple-400 transition-colors">
+                  <Instagram size={24} />
+                </a>
+                <a href="#" className="hover:text-purple-400 transition-colors">
+                  <LinkedIn size={24} />
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 In-Hand Digital. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default FullWebsite;
